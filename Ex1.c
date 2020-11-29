@@ -24,7 +24,7 @@ int afficheTab(int* tab, int size, int nbElts) { // Permet d'arffiche les premie
 	else {
 		for (int i = 0; i < nbElts; i++) {
 			printf("%d ", tab[i]);
-
+			
 		printf("\n");
 		}
 		return 0;
@@ -41,8 +41,6 @@ int remplirtableau(int* tab, int size, int* nbElts, int nombre) {
 		}
 	}
 }
-
-
 
 
 int* ajouteElementDansTableau(int* tab, int* size, int* nbElts, int element) {
@@ -62,7 +60,6 @@ int* ajouteElementDansTableau(int* tab, int* size, int* nbElts, int element) {
 		*nbElts += 1; // nombre d'élement total du tableau augmente
 	}
 	return tab;
-
 }
 
 int main() {
