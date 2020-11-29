@@ -1,0 +1,138 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include "Header_Ex2.h"
+#define TAILLEINITIALE 100
+
+
+TABLEAU newArray() {//Initialisation du tableau
+	int* elt = NULL;
+	int size = TAILLEINITIALE;
+	int eltsCount = 0;
+	elt = (int*)malloc(TAILLEINITIALE * sizeof(int));
+
+	if (elt == NULL) { printf("mémoire insuffisante"); TABLEAU tableau1 = { NULL,size,eltsCount }; return(tableau1); }
+	else {
+
+		TABLEAU tableau = { elt,size,eltsCount };
+		return tableau;
+	}
+}
+
+
+int incrementArraySize(TABLEAU* tab, int incrementValue) {
+	int* tpm;
+	tab->size = tab->size + incrementValue; // Augmentation de la taille du tableau ou size.heure 
+
+	if (tab->elt == NULL) {
+		return 0;
+	}
+	else {
+		tpm = (int*)realloc(tab->elt, tab->size * sizeof(int)); 
+		//On réalloue de la mémoire
+		if (tpm == NULL) {
+			return 0;  //renvoie 0 si la réallocation a échoué	
+		}
+		else {
+			tab->elt = tpm;
+			return tab->size; //Si Réussie, renvoie la taille du tableau après incrémentation
+		}
+	}
+	free(tab->elt);
+}
+
+void PERMUTER(int* A, int* B)
+{
+	int tmp;
+	tmp = *A;
+	*A = *B;
+	*B = tmp;
+}
+
+int setElement(TABLEAU* tab, int pos, int element) {
+	if (pos > tab->eltsCount) {
+		for (int i = tab->eltsCount; i < pos - 1; i++) {
+			tab->elt[i] = 0;
+		}
+		tab->elt[pos - 1] = element;
+		return pos;
+	}
+	else if (pos > tab->size) { //Si ne rentre pas dans le tableau
+		return 0;// Pour changer la taille du tableau il faut incrementArraySize(pos-size) puis faire une boucle for pour mettre des zéros 
+		// incrementarraysize(pos-tab->size)
+		//for (int i = tab->eltsCount; i < pos - 1; i++) {
+		//tab->elt[i] = 0;
+	}		//tab->elt[pos - 1] = element;
+	else {
+		*(tab->elt + pos - 1) = element;
+		return pos;
+	}
+}
+
+
+int DisplayElements(TABLEAU* tab, int StartPos, int EndPos) {
+	if (StartPos<1 || EndPos>tab->size) { //En dehors du tableau
+		return 0;
+	}
+	else {
+		for (int i = StartPos; i < EndPos; i++)
+		{
+			printf("%d ", *(tab->elt + i)); //Affichage du tableau
+		}
+		printf("\n");
+		return 1;
+	}
+}
+
+int deleteElements(TABLEAU* tab, int startPos, int endPos) {
+	int* tpm;
+	int sizeinit = TAILLEINITIALE;//taille initiale du tableau
+	int size = TAILLEINITIALE - (endPos - startPos);//donne la taille finale du tableau
+
+	if (startPos > endPos) {//permet d'echanger les deux positions
+		PERMUTER(startPos, endPos);
+	}
+	int position = startPos;
+	do {
+		for (int i = startPos; i < sizeinit - 1; i++) {
+			*(tab->elt + i) = *(tab->elt + (i + 1));
+		}
+		position++;
+	} while (position < endPos);
+	if (tab->elt == NULL) {
+		return 0;
+	} //Renvoie la taille du tableau après incrémentation
+	else {
+		tpm = (int*)realloc(tab->elt, (TAILLEINITIALE - (endPos - startPos)) * sizeof(int));
+		//On réalloue de la mémoire
+		if (tpm == NULL) {
+			return 0; //Renvoie 0 si l'allocation mémoire a echoué
+		}
+		else {
+			tab->elt = tpm;
+		}
+		return size;
+		free(tab->elt);
+		// si reussie renvoie la taille du tableau
+	}
+	//	return size;
+}
+
+int main() {
+	TABLEAU tab = newArray(); //Initialisation du tableau
+	printf("Taille initiale : %d \n", tab.size); //Affichage de sa taille
+	incrementArraySize(&tab, 2); //Incrémentation de 2
+	for (int i = 0; i < TAILLEINITIALE; i++) {//On remplie le tableau avec des valeurs pour pouvoir faire le test
+		tab.elt[i] = i;
+		printf("%d ", tab.elt[i]);
+	}
+	printf("\nTaille incrementee : %d \n", tab.size);//Affichage de la taille après remplissage 
+	printf("%d", setElement(&tab, 5, 3));//Met 3 au rang 5
+	printf("%d", DisplayElements(&tab, 0, 5));//Affiche les éléments du rang 0 à 5
+	printf("\n");
+	printf("%d ", deleteElements(&tab, 23, 50));//Supprime les éléments du rang 23 à 50
+	printf("\n");
+	for (int i = 0; i < TAILLEINITIALE - (50 - 23) + 1; i++) {//Affiche le tableau final 
+		printf("%d ", (tab.elt[i]));
+	}
+
+}
